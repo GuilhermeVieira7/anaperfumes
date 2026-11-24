@@ -11,6 +11,13 @@ const CONFIG = {
   cidade: "Parauapebas, PA",
   // Texto do frete exibido na sacola
   freteTexto: "Entrega combinada pelo WhatsApp. Retirada grátis em Parauapebas.",
+  // Faixa fina no topo do site. Deixe "" para esconder.
+  avisoTopo: "Entrega grátis em Parauapebas acima de R$ 199",
+  // Desconto para pagamento no Pix, em %. Use 0 para não mostrar.
+  descontoPix: 5,
+  // Parcelamento sem juros no cartão
+  parcelasSemJuros: 3,
+  parcelaMinima: 30, // valor mínimo de cada parcela, em R$
 };
 
 /* Famílias olfativas
@@ -32,6 +39,7 @@ const FAMILIAS = {
    - imagem: caminho da foto (ex.: "img/produtos/meu-perfume.png"). Deixe "" para usar o frasco desenhado.
    - tamanhos: lista de { ml, preco }
    - destaque: true para aparecer com o selo "Mais pedido"
+   - novo: true para aparecer com o selo "Novo" (opcional)
 */
 const PRODUTOS = [
   {
@@ -163,6 +171,7 @@ const PRODUTOS = [
     notas: { topo: ["Açaí", "Cassis"], coracao: ["Rosa turca", "Açafrão"], fundo: ["Âmbar", "Baunilha", "Patchouli"] },
     tamanhos: [{ ml: 30, preco: 139.9 }, { ml: 50, preco: 199.9 }, { ml: 100, preco: 289.9 }],
     destaque: false,
+    novo: true,
   },
   {
     id: "folha-de-caju",

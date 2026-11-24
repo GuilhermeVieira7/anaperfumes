@@ -18,7 +18,11 @@
   <a class="pular" href="#perfumes">Pular para os perfumes</a>
 
   <header class="topo" id="topo">
+    <p class="faixa" id="faixa"></p>
     <div class="topo__inner">
+      <button class="btn-menu" id="abrirMenu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuMobile">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
       <a href="#" class="marca" aria-label="Ana Perfumes, início">
         <span class="marca__ana">Ana</span>
         <span class="marca__perfumes">perfumes</span>
@@ -29,6 +33,9 @@
         <a href="#como-comprar">Como comprar</a>
         <a href="#sobre">Sobre</a>
       </nav>
+      <button class="btn-icone" id="irBusca" aria-label="Buscar perfume">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
       <button class="btn-sacola" id="abrirSacola" aria-label="Abrir sacola">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
         <span>Sacola</span>
@@ -36,6 +43,14 @@
       </button>
     </div>
   </header>
+
+  <nav class="menu-mobile" id="menuMobile" aria-label="Menu" hidden>
+    <a href="#perfumes">Perfumes</a>
+    <a href="#familias">Famílias olfativas</a>
+    <a href="#como-comprar">Como comprar</a>
+    <a href="#sobre">Sobre a Ana</a>
+    <a href="#" class="menu-mobile__whats" id="menuWhats" target="_blank" rel="noopener">Falar no WhatsApp</a>
+  </nav>
 
   <main>
     <!-- HERO: o frasco muda de cor conforme a família escolhida -->
@@ -81,6 +96,28 @@
           </g>
         </svg>
       </div>
+    </section>
+
+    <!-- BENEFÍCIOS -->
+    <section class="beneficios" aria-label="Vantagens de comprar na Ana Perfumes">
+      <ul>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.3 7.5 9.5 4.4-1.2 7.5-5.1 7.5-9.5V6L12 3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+          <div><strong>Originais com nota</strong><span>Procedência garantida em todo frasco</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+          <div><strong>Entrega em Parauapebas</strong><span id="benefEntrega">Combinada no WhatsApp</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 3 3-3 3-3-3zM12 15l3 3-3 3-3-3zM3 12l3-3 3 3-3 3zM15 12l3-3 3 3-3 3z"/></svg>
+          <div><strong id="benefPixTitulo">Desconto no Pix</strong><span id="benefParcelas">Ou parcele no cartão</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7c-2-3.5-6-3.5-6-1s4 1 6 1c2 0 6 1.5 6-1s-4-2.5-6 1"/></svg>
+          <div><strong>Embalagem para presente</strong><span>É só marcar na sacola</span></div>
+        </li>
+      </ul>
     </section>
 
     <!-- CATÁLOGO -->
@@ -166,13 +203,33 @@
 
   <footer class="rodape">
     <div class="rodape__inner">
-      <a href="#" class="marca marca--rodape" aria-label="Ana Perfumes, voltar ao topo">
-        <span class="marca__ana">Ana</span>
-        <span class="marca__perfumes">perfumes</span>
-      </a>
-      <p id="rodapeCidade"></p>
-      <p class="rodape__copy">© <span id="ano"></span> Ana Perfumes. Imagens e produtos meramente ilustrativos.</p>
+      <div class="rodape__marca">
+        <a href="#" class="marca marca--rodape" aria-label="Ana Perfumes, voltar ao topo">
+          <span class="marca__ana">Ana</span>
+          <span class="marca__perfumes">perfumes</span>
+        </a>
+        <p id="rodapeCidade"></p>
+      </div>
+      <div class="rodape__col">
+        <h2>Loja</h2>
+        <a href="#perfumes">Todos os perfumes</a>
+        <a href="#familias">Famílias olfativas</a>
+        <a href="#perfumes" data-fav-link>Meus favoritos</a>
+      </div>
+      <div class="rodape__col">
+        <h2>Ajuda</h2>
+        <a href="#como-comprar">Como comprar</a>
+        <a href="#" id="rodapeTroca" target="_blank" rel="noopener">Trocas e devoluções</a>
+        <a href="#sobre">Sobre a Ana</a>
+      </div>
+      <div class="rodape__col">
+        <h2>Atendimento</h2>
+        <a href="#" id="rodapeWhats" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#" id="rodapeInsta" target="_blank" rel="noopener">Instagram</a>
+        <p class="rodape__pag">Pix, cartão de crédito e dinheiro</p>
+      </div>
     </div>
+    <p class="rodape__copy">© <span id="ano"></span> Ana Perfumes. Produtos e imagens de demonstração.</p>
   </footer>
 
   <!-- Botão flutuante WhatsApp -->
@@ -199,7 +256,12 @@
       <a href="#perfumes" class="btn btn--linha" id="sacolaExplorar">Ver perfumes</a>
     </div>
     <div class="sacola__rodape" id="sacolaRodape">
+      <label class="presente">
+        <input type="checkbox" id="opPresente" />
+        <span>Embalar para presente</span>
+      </label>
       <div class="sacola__total"><span>Total</span><strong id="sacolaTotal">R$ 0,00</strong></div>
+      <p class="sacola__pix" id="sacolaPix"></p>
       <p class="sacola__frete" id="sacolaFrete"></p>
       <a class="btn btn--escuro btn--cheio" id="finalizar" target="_blank" rel="noopener">Enviar pedido pelo WhatsApp</a>
     </div>
@@ -207,6 +269,9 @@
 
   <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
 
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Store","name":"Ana Perfumes","address":{"@type":"PostalAddress","addressLocality":"Parauapebas","addressRegion":"PA","addressCountry":"BR"}}
+  </script>
   <script src="js/produtos.js"></script>
   <script src="js/app.js"></script>
 </body>

@@ -14,6 +14,21 @@
   const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const menorPreco = (p) => Math.min(...p.tamanhos.map((t) => t.preco));
   const porId = (id) => PRODUTOS.find((p) => p.id === id);
+  const comPix = (v) => v * (1 - (CONFIG.descontoPix || 0) / 100);
+  function parcelas(v) {
+    const n = Math.min(CONFIG.parcelasSemJuros || 1, Math.floor(v / (CONFIG.parcelaMinima || 1)));
+    return n >= 2 ? `ou ${n}x de ${brl(v / n)} sem juros` : "";
+  }
+  function blocoPreco(v, aPartir = false) {
+    const pix = CONFIG.descontoPix > 0;
+    return `
+      <div class="preco">
+        ${aPartir ? '<small class="preco__de">a partir de</small>' : ""}
+        <span class="preco__cheio">${brl(v)}</span>
+        ${pix ? `<span class="preco__pix"><strong>${brl(comPix(v))}</strong> no Pix</span>` : ""}
+        ${parcelas(v) ? `<small class="preco__parc">${parcelas(v)}</small>` : ""}
+      </div>`;
+  }
   const linkWhats = (texto) =>
     `https://wa.me/${CONFIG.whatsapp}${texto ? "?text=" + encodeURIComponent(texto) : ""}`;
 
@@ -89,6 +104,14 @@
   try { sacola = JSON.parse(localStorage.getItem(CHAVE)) || []; } catch { sacola = []; }
   sacola = sacola.filter((i) => porId(i.id) && porId(i.id).tamanhos.some((t) => t.ml === i.ml));
 
+  let favoritos = [];
+  try { favoritos = JSON.parse(localStorage.getItem("anaperfumes-favoritos")) || []; } catch { favoritos = []; }
+  const ehFav = (id) => favoritos.includes(id);
+  function alternarFav(id) {
+    favoritos = ehFav(id) ? favoritos.filter((f) => f !== id) : [...favoritos, id];
+    try { localStorage.setItem("anaperfumes-favoritos", JSON.stringify(favoritos)); } catch {}
+  }
+
   const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(sacola)); } catch {} };
   const precoItem = (i) => porId(i.id).tamanhos.find((t) => t.ml === i.ml).preco;
 
@@ -128,6 +151,9 @@
 
     const total = sacola.reduce((s, i) => s + precoItem(i) * i.qtd, 0);
     $("#sacolaTotal").textContent = brl(total);
+    $("#sacolaPix").innerHTML = CONFIG.descontoPix > 0 && total
+      ? `ou <strong>${brl(comPix(total))}</strong> no Pix${parcelas(total) ? `, ${parcelas(total)}` : ""}` : "";
+    const presente = $("#opPresente").checked;
     $("#sacolaVazia").hidden = sacola.length > 0;
     $("#sacolaRodape").hidden = sacola.length === 0;
 
@@ -135,7 +161,7 @@
       const p = porId(i.id);
       return `• ${i.qtd}x ${p.nome} (${p.linha}) ${i.ml} ml - ${brl(precoItem(i) * i.qtd)}`;
     });
-    const msg = `Olá, Ana! Quero fazer este pedido:\n\n${linhas.join("\n")}\n\nTotal: ${brl(total)}\n\nMeu nome:\nBairro para entrega:`;
+    const msg = `Olá, Ana! Quero fazer este pedido:\n\n${linhas.join("\n")}\n\nTotal: ${brl(total)}${CONFIG.descontoPix > 0 ? ` (no Pix: ${brl(comPix(total))})` : ""}${presente ? "\nQuero embalagem para presente." : ""}\n\nForma de pagamento:\nMeu nome:\nBairro para entrega:`;
     $("#finalizar").href = linkWhats(msg);
   }
 
@@ -147,10 +173,13 @@
     salvar(); renderSacola();
   });
 
+  $("#opPresente").addEventListener("change", renderSacola);
+
   const painel = $("#sacola"), fundo = $("#sacolaFundo");
   let focoAnterior = null;
   function abrirSacola() {
     focoAnterior = document.activeElement;
+    $("#aviso").classList.remove("visivel");
     fundo.hidden = false;
     requestAnimationFrame(() => { painel.classList.add("aberta"); fundo.classList.add("visivel"); });
     painel.setAttribute("aria-hidden", "false");
@@ -180,18 +209,19 @@
   }
 
   /* ---------- Catálogo ---------- */
-  const filtro = { familia: "", genero: "", busca: "", ordem: "destaque" };
+  const filtro = { familia: "", genero: "", busca: "", ordem: "destaque", favoritos: false };
 
   function filtrados() {
     const q = filtro.busca.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
     const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
     let lista = PRODUTOS.filter((p) =>
+      (!filtro.favoritos || ehFav(p.id)) &&
       (!filtro.familia || p.familia === filtro.familia) &&
       (!filtro.genero || p.genero === filtro.genero) &&
       (!q || norm([p.nome, p.linha, p.descricao, ...p.notas.topo, ...p.notas.coracao, ...p.notas.fundo].join(" ")).includes(q))
     );
     const ord = {
-      destaque: (a, b) => (b.destaque ? 1 : 0) - (a.destaque ? 1 : 0),
+      destaque: (a, b) => (b.destaque ? 2 : b.novo ? 1 : 0) - (a.destaque ? 2 : a.novo ? 1 : 0),
       menor: (a, b) => menorPreco(a) - menorPreco(b),
       maior: (a, b) => menorPreco(b) - menorPreco(a),
       nome: (a, b) => a.nome.localeCompare(b.nome, "pt-BR"),
@@ -206,41 +236,49 @@
       const varios = p.tamanhos.length > 1;
       return `
         <li class="produto" style="--fam:${fam.cor}">
-          <button class="produto__vitrine" data-abrir="${p.id}" aria-label="Ver detalhes de ${p.nome}">
-            ${p.destaque ? '<span class="selo">Mais pedido</span>' : ""}
-            ${frascoSVG(p)}
-          </button>
+          <div class="produto__vitrine">
+            <button class="produto__abrir" data-abrir="${p.id}" aria-label="Ver detalhes de ${p.nome}">
+              ${p.destaque ? '<span class="selo">Mais pedido</span>' : p.novo ? '<span class="selo selo--novo">Novo</span>' : ""}
+              ${frascoSVG(p)}
+            </button>
+            <button class="fav" data-fav="${p.id}" aria-pressed="${ehFav(p.id)}" aria-label="Favoritar ${p.nome}">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0 1 12 7.6 4.2 4.2 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10Z"/></svg>
+            </button>
+          </div>
           <div class="produto__info">
             <p class="produto__fam"><i style="background:${fam.cor}"></i>${fam.nome}, ${GENERO[p.genero].toLowerCase()}</p>
             <h3><button data-abrir="${p.id}">${p.nome}</button></h3>
-            <p class="produto__linha">${p.linha}</p>
-            <div class="produto__compra">
-              <p class="produto__preco">${varios ? "<small>a partir de</small>" : ""}${brl(menorPreco(p))}</p>
-              <button class="btn btn--linha btn--pequeno" data-add="${p.id}">Adicionar</button>
-            </div>
+            <p class="produto__linha">${p.linha}, ${p.tamanhos.map((t) => t.ml).join(" / ")} ml</p>
+            ${blocoPreco(menorPreco(p), varios)}
+            <button class="btn btn--escuro btn--pequeno produto__add" data-add="${p.id}">Adicionar à sacola</button>
           </div>
         </li>`;
     }).join("");
     $("#vazio").hidden = lista.length > 0;
+    $("#vazio p").textContent = filtro.favoritos && !favoritos.length
+      ? "Você ainda não favoritou nenhum perfume. Toque no coração para guardar os que gostar."
+      : "Nenhum perfume com esses filtros.";
     $("#catConta").textContent = `${lista.length} ${lista.length === 1 ? "perfume" : "perfumes"}`;
   }
 
   function renderChips() {
-    const chips = [`<button class="chip" data-fam="" aria-pressed="${!filtro.familia}">Todas</button>`]
+    const chips = [`<button class="chip" data-fam="" aria-pressed="${!filtro.familia && !filtro.favoritos}">Todas</button>`]
       .concat(Object.entries(FAMILIAS).map(([k, f]) =>
         `<button class="chip" data-fam="${k}" aria-pressed="${filtro.familia === k}" style="--cor:${f.cor}"><i></i>${f.nome}</button>`));
+    chips.push(`<button class="chip chip--fav" data-favs aria-pressed="${filtro.favoritos}">Favoritos (${favoritos.length})</button>`);
     $("#filtroFamilias").innerHTML = chips.join("");
   }
 
   $("#filtroFamilias").addEventListener("click", (e) => {
+    if (e.target.closest("[data-favs]")) { filtro.favoritos = !filtro.favoritos; filtro.familia = ""; renderChips(); renderGrade(); return; }
     const b = e.target.closest("[data-fam]"); if (!b) return;
-    filtro.familia = b.dataset.fam; renderChips(); renderGrade();
+    filtro.familia = b.dataset.fam; filtro.favoritos = false; renderChips(); renderGrade();
   });
   $("#busca").addEventListener("input", (e) => { filtro.busca = e.target.value; renderGrade(); });
   $("#filtroGenero").addEventListener("change", (e) => { filtro.genero = e.target.value; renderGrade(); });
   $("#ordenar").addEventListener("change", (e) => { filtro.ordem = e.target.value; renderGrade(); });
   $("#limparFiltros").addEventListener("click", () => {
-    Object.assign(filtro, { familia: "", genero: "", busca: "" });
+    Object.assign(filtro, { familia: "", genero: "", busca: "", favoritos: false });
     $("#busca").value = ""; $("#filtroGenero").value = "";
     renderChips(); renderGrade();
   });
@@ -248,12 +286,26 @@
   $("#grade").addEventListener("click", (e) => {
     const abrir = e.target.closest("[data-abrir]");
     const add = e.target.closest("[data-add]");
-    if (add) { const p = porId(add.dataset.add); adicionar(p.id, p.tamanhos[0].ml); }
+    const fav = e.target.closest("[data-fav]");
+    if (fav) {
+      alternarFav(fav.dataset.fav);
+      fav.setAttribute("aria-pressed", ehFav(fav.dataset.fav));
+      renderChips();
+      if (filtro.favoritos) renderGrade();
+      return;
+    }
+    if (add) {
+      const p = porId(add.dataset.add);
+      if (p.tamanhos.length > 1) { abrirModal(p.id); return; }
+      adicionar(p.id, p.tamanhos[0].ml);
+      add.textContent = "Adicionado"; add.classList.add("ok");
+      setTimeout(() => { add.textContent = "Adicionar à sacola"; add.classList.remove("ok"); }, 1600);
+    }
     else if (abrir) abrirModal(abrir.dataset.abrir);
   });
 
   function irParaFamilia(k) {
-    filtro.familia = k; renderChips(); renderGrade();
+    filtro.familia = k; filtro.favoritos = false; renderChips(); renderGrade();
     $("#perfumes").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }
 
@@ -279,6 +331,8 @@
             </div>`).join("")}
         </div>
 
+        <div id="mPrecoBloco"></div>
+
         <fieldset class="tamanhos">
           <legend>Tamanho</legend>
           ${p.tamanhos.map((t, i) => `
@@ -288,20 +342,20 @@
             </label>`).join("")}
         </fieldset>
 
+        <a class="link" target="_blank" rel="noopener" href="${linkWhats(`Olá, Ana! Tenho uma dúvida sobre o perfume ${p.nome}.`)}">Tirar dúvida sobre este perfume no WhatsApp</a>
         <div class="modal__compra">
           <div class="qtd qtd--grande" aria-label="Quantidade">
             <button type="button" data-q="-1" aria-label="Diminuir quantidade">−</button>
             <span id="mQtd">1</span>
             <button type="button" data-q="1" aria-label="Aumentar quantidade">+</button>
           </div>
-          <button class="btn btn--escuro" id="mAdd">Adicionar à sacola, <span id="mPreco"></span></button>
+          <button class="btn btn--escuro" id="mAdd">Adicionar à sacola</button>
         </div>
-        <a class="link" target="_blank" rel="noopener" href="${linkWhats(`Olá, Ana! Tenho uma dúvida sobre o perfume ${p.nome}.`)}">Tirar dúvida sobre este perfume no WhatsApp</a>
       </div>`;
 
     const atualizar = () => {
       const preco = p.tamanhos.find((t) => t.ml === sel).preco;
-      $("#mPreco").textContent = brl(preco * qtd);
+      $("#mPrecoBloco").innerHTML = blocoPreco(preco * qtd);
       $("#mQtd").textContent = qtd;
     };
     $$('input[name="tam"]', modal).forEach((r) => r.addEventListener("change", () => { sel = +r.value; atualizar(); }));
@@ -361,6 +415,34 @@
   $("#rodapeCidade").textContent = `${CONFIG.cidade}. Pedidos pelo WhatsApp e Instagram @${CONFIG.instagram}.`;
   $("#sacolaFrete").textContent = CONFIG.freteTexto;
   $("#ano").textContent = new Date().getFullYear();
+
+  /* Faixa de aviso */
+  if (CONFIG.avisoTopo) $("#faixa").textContent = CONFIG.avisoTopo; else $("#faixa").remove();
+  if (CONFIG.descontoPix > 0) $("#benefPixTitulo").textContent = `${CONFIG.descontoPix}% de desconto no Pix`;
+  if (CONFIG.parcelasSemJuros > 1) $("#benefParcelas").textContent = `Ou em até ${CONFIG.parcelasSemJuros}x sem juros no cartão`;
+  $("#rodapeWhats").href = linkWhats("Olá, Ana! Vim pelo site.");
+  $("#rodapeInsta").href = `https://instagram.com/${CONFIG.instagram}`;
+  $("#rodapeTroca").href = linkWhats("Olá, Ana! Queria saber sobre troca ou devolução.");
+  $("#menuWhats").href = linkWhats("Olá, Ana! Vim pelo site.");
+  $("[data-fav-link]").addEventListener("click", () => { filtro.favoritos = true; filtro.familia = ""; renderChips(); renderGrade(); });
+
+  /* Busca pelo cabeçalho */
+  $("#irBusca").addEventListener("click", () => {
+    $("#perfumes").scrollIntoView();
+    setTimeout(() => $("#busca").focus({ preventScroll: true }), 50);
+  });
+
+  /* Menu no celular */
+  const menu = $("#menuMobile"), btnMenu = $("#abrirMenu");
+  function alternarMenu(abrir) {
+    menu.hidden = !abrir;
+    btnMenu.setAttribute("aria-expanded", abrir);
+    btnMenu.setAttribute("aria-label", abrir ? "Fechar menu" : "Abrir menu");
+    document.body.classList.toggle("menu-aberto", abrir);
+  }
+  btnMenu.addEventListener("click", () => alternarMenu(menu.hidden));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) alternarMenu(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { alternarMenu(false); btnMenu.focus(); } });
 
   /* Cabeçalho muda de cor depois do hero */
   const topo = $("#topo");
