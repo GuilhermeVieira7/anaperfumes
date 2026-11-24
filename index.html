@@ -56,45 +56,26 @@
     <!-- HERO: o frasco muda de cor conforme a família escolhida -->
     <section class="hero" id="hero" aria-labelledby="heroTitulo">
       <div class="hero__texto">
-        <h1 id="heroTitulo">Escolha pelo que você quer sentir.</h1>
+        <h1 id="heroTitulo" class="hero__titulo">
+          <span class="linha"><span>Escolha pelo</span></span>
+          <span class="linha"><span>que você quer</span></span>
+          <span class="linha"><span>sentir.</span></span>
+        </h1>
         <p class="hero__sub">Perfumes selecionados pela Ana, com entrega em Parauapebas. Toque numa família e veja o que combina com você.</p>
 
         <div class="familias-hero" role="radiogroup" aria-label="Famílias olfativas" id="familiasHero"></div>
 
         <p class="hero__frase" id="heroFrase" aria-live="polite"></p>
-        <a href="#perfumes" class="btn btn--claro" id="heroVer">Ver perfumes</a>
+        <div class="hero__acoes">
+          <a href="#perfumes" class="btn btn--claro" id="heroVer">Ver perfumes</a>
+          <button type="button" class="link link--claro" data-quiz>Não sei qual escolher</button>
+        </div>
       </div>
 
-      <div class="hero__frasco" aria-hidden="true">
-        <svg class="frasco-hero" viewBox="0 0 300 420">
-          <defs>
-            <clipPath id="clipCorpo">
-              <path d="M58 150 Q58 128 80 124 L220 124 Q242 128 242 150 L242 370 Q242 398 214 398 L86 398 Q58 398 58 370 Z"/>
-            </clipPath>
-            <linearGradient id="vidroBrilho" x1="0" x2="1">
-              <stop offset="0" stop-color="#fff" stop-opacity=".35"/>
-              <stop offset=".18" stop-color="#fff" stop-opacity=".05"/>
-              <stop offset=".8" stop-color="#fff" stop-opacity="0"/>
-              <stop offset="1" stop-color="#fff" stop-opacity=".18"/>
-            </linearGradient>
-          </defs>
-          <!-- tampa -->
-          <rect x="112" y="30" width="76" height="62" rx="6" class="frasco-hero__tampa"/>
-          <rect x="128" y="92" width="44" height="32" class="frasco-hero__gargalo"/>
-          <!-- corpo -->
-          <path d="M58 150 Q58 128 80 124 L220 124 Q242 128 242 150 L242 370 Q242 398 214 398 L86 398 Q58 398 58 370 Z" class="frasco-hero__vidro"/>
-          <g clip-path="url(#clipCorpo)">
-            <rect x="40" y="168" width="220" height="250" class="frasco-hero__liquido" id="heroLiquido"/>
-            <path class="frasco-hero__onda" d="M40 170 Q90 160 150 170 T260 170 V182 H40 Z"/>
-          </g>
-          <path d="M58 150 Q58 128 80 124 L220 124 Q242 128 242 150 L242 370 Q242 398 214 398 L86 398 Q58 398 58 370 Z" fill="url(#vidroBrilho)"/>
-          <!-- rótulo -->
-          <g class="frasco-hero__rotulo">
-            <rect x="96" y="250" width="108" height="66" rx="2"/>
-            <text x="150" y="281" text-anchor="middle" class="rotulo-ana">Ana</text>
-            <text x="150" y="302" text-anchor="middle" class="rotulo-fam" id="heroRotulo">Floral</text>
-          </g>
-        </svg>
+      <div class="hero__palco" id="heroPalco" aria-hidden="true">
+        <div class="hero__aura"></div>
+        <div class="hero__ingredientes" id="heroIngredientes"></div>
+        <div class="hero__frasco" id="heroFrasco"></div>
       </div>
     </section>
 
@@ -162,11 +143,17 @@
       </div>
     </section>
 
+    <!-- FAIXA DE NOTAS -->
+    <div class="notas-faixa" aria-hidden="true">
+      <div class="notas-faixa__trilho" id="notasFaixa"></div>
+    </div>
+
     <!-- FAMÍLIAS -->
     <section class="familias" id="familias" aria-labelledby="famTitulo">
       <div class="familias__intro">
         <h2 id="famTitulo">Não sabe por onde começar?</h2>
-        <p>Todo perfume pertence a uma família. Descubra a sua pela sensação e a Ana separa as opções certas.</p>
+        <p>Todo perfume pertence a uma família. Descubra a sua pela sensação, ou responda três perguntas e receba uma sugestão.</p>
+        <button type="button" class="btn btn--escuro" data-quiz>Descobrir meu perfume</button>
       </div>
       <ul class="familias__lista" id="familiasLista"></ul>
     </section>
@@ -243,6 +230,13 @@
     <div class="modal__corpo" id="modalCorpo"></div>
   </dialog>
 
+  <!-- Quiz -->
+  <dialog class="modal quiz" id="quiz" aria-labelledby="quizTitulo">
+    <button class="fechar" data-fechar aria-label="Fechar">×</button>
+    <div class="quiz__progresso" aria-hidden="true"><span id="quizBarra"></span></div>
+    <div class="quiz__corpo" id="quizCorpo"></div>
+  </dialog>
+
   <!-- Sacola -->
   <div class="sacola-fundo" id="sacolaFundo" hidden></div>
   <aside class="sacola" id="sacola" aria-labelledby="sacolaTitulo" aria-hidden="true">
@@ -273,6 +267,7 @@
   {"@context":"https://schema.org","@type":"Store","name":"Ana Perfumes","address":{"@type":"PostalAddress","addressLocality":"Parauapebas","addressRegion":"PA","addressCountry":"BR"}}
   </script>
   <script src="js/produtos.js"></script>
+  <script src="js/graficos.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
