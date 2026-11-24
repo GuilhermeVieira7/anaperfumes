@@ -13,9 +13,10 @@ Tudo fica em **`js/produtos.js`**:
    - `genero`: `feminino`, `masculino` ou `unissex`
    - `notas`: notas de saída (`topo`), `coracao` e `fundo`
    - `tamanhos`: lista de `{ ml, preco }`
-   - `destaque: true` mostra o selo "Mais pedido"
-   - `imagem`: caminho da foto, ex. `"img/produtos/priprioca.png"`. Enquanto estiver vazio, o site desenha um frasco em estilo de estúdio na cor da família.
-     **Fotos:** use PNG ou WebP com **fundo transparente**, quadradas (800×800 ou 1000×1000), com o frasco centralizado e de pé. O site aplica sombra e a ilustração do ingrediente automaticamente. Para tirar o fundo de uma foto de celular, dá para usar o remove.bg ou o Canva.
+   - `destaque: true` mostra o selo "Mais pedido" e coloca o perfume na seção Mais pedidos e na abertura
+   - `tampa`: `preta`, `prata`, `ouro` ou `madeira` (opcional, só para o frasco desenhado)
+   - `imagem`: caminho da foto, ex. `"img/produtos/priprioca.png"`. Enquanto estiver vazio, o site desenha um frasco em fundo de estúdio, com o nome do perfume no rótulo.
+     **Fotos:** use PNG ou WebP com **fundo transparente**, quadradas (800×800 ou 1000×1000), com o frasco centralizado e de pé. O site coloca a foto sobre o fundo de estúdio automaticamente. Para tirar o fundo de uma foto de celular, dá para usar o remove.bg ou o Canva.
 3. **`FAMILIAS`**: se quiser, ajuste as cores e as frases de cada família.
 
 ## Como funciona a compra
@@ -32,7 +33,7 @@ O quiz de três perguntas (para quem, quando usa, que sensação) recomenda os t
 index.html
 css/style.css
 js/produtos.js   ← catálogo e configurações
-js/graficos.js   ← desenho dos frascos e das ilustrações de ingredientes
+js/graficos.js   ← desenho dos frascos em fundo de estúdio (usado enquanto não há foto)
 js/app.js        ← lógica do site (catálogo, sacola, quiz, animações)
 img/             ← favicon e fotos dos produtos
 ```

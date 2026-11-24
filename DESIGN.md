@@ -1,41 +1,44 @@
 # Ana Perfumes: sistema visual
 
-Guia curto para manter o site consistente quando ele crescer. Segue a mesma lógica dos design systems de grandes marcas de beleza (GaYa, da Natura, e Flora, do Grupo Boticário): decisões visuais viram **tokens** com nome e são reaproveitadas em todos os componentes. Os tokens ficam no início de `css/style.css`.
+Linha de referência: lojas de perfumaria de marca global (Byredo, Aesop, Diptyque, O Boticário). O produto é o protagonista, a interface fica em segundo plano. Os valores ficam como tokens no início de `css/style.css`, no mesmo método dos design systems da Natura (GaYa) e do Grupo Boticário (Flora).
+
+## Princípios
+
+1. **O produto em fundo de estúdio.** Todo frasco aparece sobre o mesmo fundo de pedra clara, com luz do alto e chão levemente mais escuro, como numa foto de catálogo. As fotos reais entram no mesmo lugar.
+2. **Uma família tipográfica.** Hanken Grotesk em toda a interface. Títulos em peso 300, grandes e com espaçamento negativo. Interface em 400 e 500.
+3. **Cor só onde informa.** Neutros na estrutura; o verde floresta marca o que é vantagem (faixa do topo, preço no Pix, atendimento). As cores das famílias aparecem só no líquido e nas amostras.
+4. **Movimento discreto.** A abertura aparece uma vez; o resto do movimento responde ao cliente (sacola deslizando, acordeões, foco nos cards).
 
 ## Cores
 
 | Token | Hex | Uso |
 |---|---|---|
-| `--ameixa` | #34182F | Marca, botões principais, hero, rodapé |
-| `--ameixa-2` | #4A2343 | Hover dos botões principais |
-| `--ambar` | #C98A3D | Destaques: faixa do topo, selo "Novo", contador da sacola |
-| `--nevoa` | #F1EAF0 | Superfícies secundárias (pirâmide olfativa, "Como comprar") |
-| `--vidro` | #FBF8FA | Fundo da página |
-| `--tinta` | #21131F | Texto |
-| `--suave` | #6E5A69 | Texto secundário (contraste 6:1 sobre o fundo) |
-| `--cor-pix` | #2F7A55 | Preço no Pix e confirmação "Adicionado" |
-
-As cores das **famílias olfativas** ficam em `js/produtos.js` e tingem o líquido do frasco, o fundo da vitrine e as bolinhas dos filtros.
+| `--papel` | #F5F4F1 | Fundo da página |
+| `--pedra` / `--estudio` | #E6E2DC | Fundo dos produtos |
+| `--tinta` | #171615 | Texto, botões principais, rodapé |
+| `--cinza` | #6B6762 | Texto secundário |
+| `--linha` | #DCD8D2 | Divisórias e bordas |
+| `--floresta` | #1F3A2E | Faixa do topo, Pix, bloco de atendimento |
 
 ## Tipografia
 
-- **Bodoni Moda**: títulos, nomes de perfume e marca. Remete às casas de perfumaria clássicas.
-- **Figtree**: textos, preços, botões.
-- Escala 1.333: 14 / 16 / 21 / 28 / 38 px e título do hero fluido (42 a 74 px).
-- Preços usam algarismos tabulares para alinhar.
+| Uso | Tamanho | Peso |
+|---|---|---|
+| Título da abertura | 44–84 px | 300 |
+| Título de seção | 28–40 px | 300 |
+| Nome de família / preço grande | 22 px | 400 |
+| Texto e botões | 15–16 px | 400–500 |
+| Apoio e legendas | 12–13 px | 400 |
 
-## Espaçamento, raios e sombra
+## Forma
 
-- Espaçamento em grade de 4/8 px: `--e-1` (4px) até `--e-9` (88px).
-- Raios com hierarquia: botões e chips são pílulas (`--pilula`), campos e vitrines quase retos (`--borda`, 3px), janelas flutuantes com `--borda-m` (8px).
-- Sombra só no que flutua sobre a página (botão do WhatsApp, frasco do hero). Cards não têm sombra.
+- Raio de 2 px em botões, campos e imagens. Nada de pílulas.
+- Botões retangulares de 52 px: preto (ação principal) e contorno (secundária).
+- Divisórias de 1 px no lugar de sombras. Sombra só no botão flutuante do WhatsApp.
 
 ## Componentes
 
-- **Card de produto**: vitrine tingida pela família, favorito, selo (Mais pedido / Novo), preço cheio, preço no Pix, parcelamento e botão de compra. Se o perfume tem mais de um tamanho, o botão abre a escolha de tamanho.
-- **Janela do produto**: pirâmide olfativa (saída, coração, fundo), tamanhos e quantidade. No celular, a barra de compra fica fixa no rodapé.
-- **Sacola**: lateral, salva no aparelho, com opção de presente e envio pelo WhatsApp.
-
-## Acessibilidade
-
-Foco visível em âmbar, alvos de toque de 44px no mínimo, menu e sacola fecham com Esc, animações desligadas para quem ativou "reduzir movimento".
+- **Card**: imagem 4:5 em fundo de estúdio, favorito, botão "Adicionar" que aparece ao passar o mouse, família, nome, linha, tamanhos, preço e preço no Pix.
+- **Página do produto**: imagem grande à esquerda; à direita preço com Pix e parcelas, tamanhos, quantidade, sacola e favoritos, e acordeões (Notas olfativas, Descrição, Entrega e pagamento). No celular, a barra de compra fica fixa.
+- **Sacola**: abre ao adicionar, com barra de progresso para entrega grátis, opção de presente e finalização pelo WhatsApp.
+- **Quiz**: três perguntas e três sugestões.

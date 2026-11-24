@@ -13,6 +13,8 @@ const CONFIG = {
   freteTexto: "Entrega combinada pelo WhatsApp. Retirada grátis em Parauapebas.",
   // Faixa fina no topo do site. Deixe "" para esconder.
   avisoTopo: "Entrega grátis em Parauapebas acima de R$ 199",
+  // Valor para entrega grátis (mostra uma barra de progresso na sacola). Use 0 para esconder.
+  freteGratisAcima: 199,
   // Desconto para pagamento no Pix, em %. Use 0 para não mostrar.
   descontoPix: 5,
   // Parcelamento sem juros no cartão
@@ -21,14 +23,14 @@ const CONFIG = {
 };
 
 /* Famílias olfativas
-   cor = cor do "líquido" do frasco e das etiquetas */
+   cor = cor do líquido no frasco desenhado e da amostra de cor nos filtros */
 const FAMILIAS = {
-  floral:     { nome: "Floral",     cor: "#E59AB4", frase: "Pétalas, pele limpa e delicadeza que dura o dia todo." },
-  amadeirado: { nome: "Amadeirado", cor: "#9A6A44", frase: "Madeiras, raízes e terra molhada. Presença sem esforço." },
-  citrico:    { nome: "Cítrico",    cor: "#E6C84B", frase: "Frescor de casca de fruta. Para calor, manhã e movimento." },
-  oriental:   { nome: "Oriental",   cor: "#A9334C", frase: "Especiarias, resinas e calor. Feito para a noite." },
-  gourmand:   { nome: "Gourmand",   cor: "#C98A3D", frase: "Baunilha, cacau e doçura que dá vontade de chegar perto." },
-  aquatico:   { nome: "Aquático",   cor: "#7DB6C8", frase: "Brisa, rio e chuva. Leve como uma pele recém-saída do banho." },
+  floral:     { nome: "Floral",     cor: "#E9C9C3", frase: "Pétalas, pele limpa e delicadeza que dura o dia todo." },
+  amadeirado: { nome: "Amadeirado", cor: "#B9844E", frase: "Madeiras, raízes e terra molhada. Presença sem esforço." },
+  citrico:    { nome: "Cítrico",    cor: "#E6D79A", frase: "Frescor de casca de fruta. Para calor, manhã e movimento." },
+  oriental:   { nome: "Oriental",   cor: "#9C4A34", frase: "Especiarias, resinas e calor. Feito para a noite." },
+  gourmand:   { nome: "Gourmand",   cor: "#CE9C57", frase: "Baunilha, cacau e doçura que dá vontade de chegar perto." },
+  aquatico:   { nome: "Aquático",   cor: "#C3DADB", frase: "Brisa, rio e chuva. Leve como pele recém-saída do banho." },
 };
 
 /* Produtos
@@ -36,6 +38,7 @@ const FAMILIAS = {
    - familia: uma das chaves de FAMILIAS
    - genero: "feminino" | "masculino" | "unissex"
    - frasco: "classico" | "redondo" | "alto" | "facetado"  (desenho usado quando não há foto)
+   - tampa: "preta" | "prata" | "ouro" | "madeira"  (opcional; padrão definido pela família)
    - imagem: caminho da foto (ex.: "img/produtos/meu-perfume.png"). Deixe "" para usar o frasco desenhado.
    - tamanhos: lista de { ml, preco }
    - destaque: true para aparecer com o selo "Mais pedido"
