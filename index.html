@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ana Perfumes | Perfumaria em Parauapebas</title>
+  <meta name="description" content="Ana Perfumes: perfumes femininos, masculinos e unissex com entrega em Parauapebas. Escolha pela família olfativa e peça pelo WhatsApp." />
+  <meta name="theme-color" content="#34182F" />
+  <meta property="og:title" content="Ana Perfumes" />
+  <meta property="og:description" content="Escolha seu perfume pelo que você quer sentir. Pedidos pelo WhatsApp." />
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a class="pular" href="#perfumes">Pular para os perfumes</a>
+
+  <header class="topo" id="topo">
+    <div class="topo__inner">
+      <a href="#" class="marca" aria-label="Ana Perfumes, início">
+        <span class="marca__ana">Ana</span>
+        <span class="marca__perfumes">perfumes</span>
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#perfumes">Perfumes</a>
+        <a href="#familias">Famílias</a>
+        <a href="#como-comprar">Como comprar</a>
+        <a href="#sobre">Sobre</a>
+      </nav>
+      <button class="btn-sacola" id="abrirSacola" aria-label="Abrir sacola">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <span>Sacola</span>
+        <span class="btn-sacola__qtd" id="sacolaQtd" aria-live="polite">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO: o frasco muda de cor conforme a família escolhida -->
+    <section class="hero" id="hero" aria-labelledby="heroTitulo">
+      <div class="hero__texto">
+        <h1 id="heroTitulo">Escolha pelo que você quer sentir.</h1>
+        <p class="hero__sub">Perfumes selecionados pela Ana, com entrega em Parauapebas. Toque numa família e veja o que combina com você.</p>
+
+        <div class="familias-hero" role="radiogroup" aria-label="Famílias olfativas" id="familiasHero"></div>
+
+        <p class="hero__frase" id="heroFrase" aria-live="polite"></p>
+        <a href="#perfumes" class="btn btn--claro" id="heroVer">Ver perfumes</a>
+      </div>
+
+      <div class="hero__frasco" aria-hidden="true">
+        <svg class="frasco-hero" viewBox="0 0 300 420">
+          <defs>
+            <clipPath id="clipCorpo">
+              <path d="M58 150 Q58 128 80 124 L220 124 Q242 128 242 150 L242 370 Q242 398 214 398 L86 398 Q58 398 58 370 Z"/>
+            </clipPath>
+            <linearGradient id="vidroBrilho" x1="0" x2="1">
+              <stop offset="0" stop-color="#fff" stop-opacity=".35"/>
+              <stop offset=".18" stop-color="#fff" stop-opacity=".05"/>
+              <stop offset=".8" stop-color="#fff" stop-opacity="0"/>
+              <stop offset="1" stop-color="#fff" stop-opacity=".18"/>
+            </linearGradient>
+          </defs>
+          <!-- tampa -->
+          <rect x="112" y="30" width="76" height="62" rx="6" class="frasco-hero__tampa"/>
+          <rect x="128" y="92" width="44" height="32" class="frasco-hero__gargalo"/>
+          <!-- corpo -->
+          <path d="M58 150 Q58 128 80 124 L220 124 Q242 128 242 150 L242 370 Q242 398 214 398 L86 398 Q58 398 58 370 Z" class="frasco-hero__vidro"/>
+          <g clip-path="url(#clipCorpo)">
+            <rect x="40" y="168" width="220" height="250" class="frasco-hero__liquido" id="heroLiquido"/>
+            <path class="frasco-hero__onda" d="M40 170 Q90 160 150 170 T260 170 V182 H40 Z"/>
+          </g>
+          <path d="M58 150 Q58 128 80 124 L220 124 Q242 128 242 150 L242 370 Q242 398 214 398 L86 398 Q58 398 58 370 Z" fill="url(#vidroBrilho)"/>
+          <!-- rótulo -->
+          <g class="frasco-hero__rotulo">
+            <rect x="96" y="250" width="108" height="66" rx="2"/>
+            <text x="150" y="281" text-anchor="middle" class="rotulo-ana">Ana</text>
+            <text x="150" y="302" text-anchor="middle" class="rotulo-fam" id="heroRotulo">Floral</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section class="catalogo" id="perfumes" aria-labelledby="catTitulo">
+      <div class="catalogo__cabeca">
+        <h2 id="catTitulo">Perfumes</h2>
+        <p class="catalogo__conta" id="catConta" aria-live="polite"></p>
+      </div>
+
+      <div class="filtros" role="search">
+        <div class="filtros__familias" id="filtroFamilias" aria-label="Filtrar por família"></div>
+        <div class="filtros__linha">
+          <label class="campo">
+            <span class="sr">Buscar perfume</span>
+            <input type="search" id="busca" placeholder="Buscar por nome ou nota (ex.: baunilha)" autocomplete="off" />
+          </label>
+          <label class="campo campo--select">
+            <span class="sr">Gênero</span>
+            <select id="filtroGenero">
+              <option value="">Todos os gêneros</option>
+              <option value="feminino">Feminino</option>
+              <option value="masculino">Masculino</option>
+              <option value="unissex">Unissex</option>
+            </select>
+          </label>
+          <label class="campo campo--select">
+            <span class="sr">Ordenar</span>
+            <select id="ordenar">
+              <option value="destaque">Mais pedidos primeiro</option>
+              <option value="menor">Menor preço</option>
+              <option value="maior">Maior preço</option>
+              <option value="nome">Nome (A a Z)</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <ul class="grade" id="grade"></ul>
+      <div class="vazio" id="vazio" hidden>
+        <p>Nenhum perfume com esses filtros.</p>
+        <button class="btn btn--linha" id="limparFiltros">Limpar filtros</button>
+      </div>
+    </section>
+
+    <!-- FAMÍLIAS -->
+    <section class="familias" id="familias" aria-labelledby="famTitulo">
+      <div class="familias__intro">
+        <h2 id="famTitulo">Não sabe por onde começar?</h2>
+        <p>Todo perfume pertence a uma família. Descubra a sua pela sensação e a Ana separa as opções certas.</p>
+      </div>
+      <ul class="familias__lista" id="familiasLista"></ul>
+    </section>
+
+    <!-- COMO COMPRAR (é uma sequência real, por isso numerada) -->
+    <section class="comprar" id="como-comprar" aria-labelledby="comprarTitulo">
+      <h2 id="comprarTitulo">Como comprar</h2>
+      <ol class="passos">
+        <li><strong>Escolha o perfume e o tamanho</strong><span>Abra o perfume para ver as notas e os tamanhos disponíveis.</span></li>
+        <li><strong>Coloque na sacola</strong><span>Junte quantos quiser. A sacola fica salva neste aparelho.</span></li>
+        <li><strong>Envie o pedido pelo WhatsApp</strong><span>A mensagem sai pronta, com os itens e o total.</span></li>
+        <li><strong>Receba ou retire</strong><span>Combinamos a entrega e o pagamento por Pix, cartão ou dinheiro.</span></li>
+      </ol>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="sobre" id="sobre" aria-labelledby="sobreTitulo">
+      <div class="sobre__texto">
+        <h2 id="sobreTitulo">Perfume escolhido de perto</h2>
+        <p>A Ana Perfumes nasceu da vontade de ajudar cada pessoa a encontrar o cheiro que é a cara dela. Antes de entrar no catálogo, cada fragrância é testada na pele: como abre, como evolui e quanto tempo fica.</p>
+        <p>Ficou em dúvida entre dois? Chama no WhatsApp e descreve o que você gosta. A Ana responde com uma sugestão sincera.</p>
+        <div class="sobre__acoes">
+          <a class="btn btn--escuro" id="linkWhatsSobre" target="_blank" rel="noopener">Falar com a Ana no WhatsApp</a>
+          <a class="link" id="linkInsta" target="_blank" rel="noopener">Seguir no Instagram</a>
+        </div>
+      </div>
+      <dl class="sobre__fatos">
+        <div><dt>Originais</dt><dd>Produtos com procedência e nota.</dd></div>
+        <div><dt>Entrega local</dt><dd>Em Parauapebas e região, combinada no WhatsApp.</dd></div>
+        <div><dt>Pagamento</dt><dd>Pix, cartão ou dinheiro na entrega.</dd></div>
+      </dl>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape__inner">
+      <a href="#" class="marca marca--rodape" aria-label="Ana Perfumes, voltar ao topo">
+        <span class="marca__ana">Ana</span>
+        <span class="marca__perfumes">perfumes</span>
+      </a>
+      <p id="rodapeCidade"></p>
+      <p class="rodape__copy">© <span id="ano"></span> Ana Perfumes. Imagens e produtos meramente ilustrativos.</p>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante WhatsApp -->
+  <a class="whats-flutuante" id="whatsFlutuante" target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8 1 3.9.8.6-.1 1.9-.8 2.2-1.6s.3-1.4.2-1.6-.3-.2-.7-.3Z"/></svg>
+  </a>
+
+  <!-- Modal do produto -->
+  <dialog class="modal" id="modal" aria-labelledby="modalNome">
+    <button class="fechar" data-fechar aria-label="Fechar">×</button>
+    <div class="modal__corpo" id="modalCorpo"></div>
+  </dialog>
+
+  <!-- Sacola -->
+  <div class="sacola-fundo" id="sacolaFundo" hidden></div>
+  <aside class="sacola" id="sacola" aria-labelledby="sacolaTitulo" aria-hidden="true">
+    <div class="sacola__topo">
+      <h2 id="sacolaTitulo">Sua sacola</h2>
+      <button class="fechar" id="fecharSacola" aria-label="Fechar sacola">×</button>
+    </div>
+    <ul class="sacola__itens" id="sacolaItens"></ul>
+    <div class="sacola__vazia" id="sacolaVazia">
+      <p>Sua sacola está vazia.</p>
+      <a href="#perfumes" class="btn btn--linha" id="sacolaExplorar">Ver perfumes</a>
+    </div>
+    <div class="sacola__rodape" id="sacolaRodape">
+      <div class="sacola__total"><span>Total</span><strong id="sacolaTotal">R$ 0,00</strong></div>
+      <p class="sacola__frete" id="sacolaFrete"></p>
+      <a class="btn btn--escuro btn--cheio" id="finalizar" target="_blank" rel="noopener">Enviar pedido pelo WhatsApp</a>
+    </div>
+  </aside>
+
+  <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+  <script src="js/produtos.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
